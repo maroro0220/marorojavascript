@@ -1,0 +1,6 @@
+<form action="/boards" method="POST">
+  Title: <input type="text" name="title" class="form-control" /><br /><br />
+  contents: <br /><textarea name="contents" rows="20" cols="80" class="form-control"></textarea><br />
+  <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>" />
+  <input type="submit" value="submit" class="btn btn-success" />
+</form>
