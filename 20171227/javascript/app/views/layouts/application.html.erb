@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Javascript</title>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="/">JavaScript</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/">Board</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="/" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sign</a>
+          <div class="dropdown-menu" aria-labelledby="dropdown01">
+            <% if user_signed_in? %>
+            <a class="dropdown-item" href="#"><%=current_user.email%></a>
+            <a class="dropdown-item" href="/signout" data-method="delete" data-confirm="R U Sure?">SignOut</a>
+            <%else%>
+            <a class="dropdown-item" href="/signin">SignIn</a>
+            <a class="dropdown-item" href="/signup">SignUp</a>
+            <%end%>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+    <div class="container" style="margin-top:5rem;">
+    <% if flash[:notice] %>
+      <div class="alert alert-success"><%= flash[:notice] %></div>
+    <% end %>
+      <%= yield %>
+    </div>
+  </body>
+</html>
