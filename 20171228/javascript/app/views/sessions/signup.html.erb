@@ -1,0 +1,16 @@
+<form class="form-signin" action="/signup" method="POST">
+   <h2 class="form-signin-heading">Please sign up</h2>
+   <label for="inputEmail" class="sr-only">Email address</label>
+   <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+   <label for="inputPassword" class="sr-only">Password</label>
+   <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+   <label for="inputPassword" class="sr-only">Password Confirmation</label>
+   <input type="password" name="password_confirmation" id="inputPassword" class="form-control" placeholder="Password Confirmation" required>
+   <!-- <div class="checkbox">
+ +    <label>
+ +      <input type="checkbox" value="remember-me"> Remember me
+ +    </label>
+ +  </div> -->
+   <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+   <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+ </form>

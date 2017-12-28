@@ -1,0 +1,100 @@
+<h1><%=@board.title%></h1>
+<p><%=@board.contents%></p>
+
+<%if @like.count > 0 %>
+<!--좋아요가 이미 눌려있을 때-->
+<button type="button" class ="btn btn-danger" id="like">
+  <i class="fas fa-american-sign-language-interpreting fa-3x fa-spin ">
+  </i> I likeeeeee it!!!!(<span id="like-counter"><%=@board.likes.count%></span>)
+</button>
+<!-- <a href="/" class ="like"></a> -->
+<%else%>
+<!--좋아요를 새로 눌렀을 때-->
+
+<button type="button" class ="btn btn-info" id="like">
+  <i class="fas fa-american-sign-language-interpreting fa-3x fa-spin "></i> I likeeeeee it!!!!(<span id="like-counter">0</span>)
+</button>
+<%end%>
+
+<a href="/"><button type="button" class ="btn btn-primary" >home</button></a>
+<br /><br />
+
+<form id ="comment-form" class="form-inline">
+  <input type="text" class = "form-control col-9 mb-2 mr-sm-2 mb-sm-0" id="comment">
+  <button type="submit" class ="btn btn-warning create-comment">commenttttt</button>
+</form>
+
+<table>
+  <tbody class ="comment-list">
+  <%@board.comments.reverse.each do |comment|%>
+    <tr>
+      <td>
+        <%=comment.contents%>
+      </td>
+      <td><a href ="/boards/<%=@board.id%>/destroy_comment">delete</a></td>
+      <td><a href ="/boards/<%=@board.id%>/edit_comment">edit</a></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<script>
+$(function(){
+  // 1. 댓글 달기 버튼을 누르면
+  // 1-1. 댓글 form이 submit되면
+  $('#comment-form').on('submit',function(event){
+    event.preventDefault();
+    console.log("clicked");
+    // 2. input 안에 ㄷ르어있는 내용을 찾아서
+    var c = $('#comment').val();
+    console.log(c);
+    $.ajax({
+      url: "/boards/<%=@board.id%>/create_comment", method: "POST", data: { contents: c}//inputname: value
+    });
+  });
+  // 3. 서버에 보내준다.
+  // 4. 작성한 내용을 input 아래에 추가해준다
+
+
+
+  // 1. 좋아요 버튼을 클릭하면
+    // 2. 버튼의 색깔을 빨강으로 바꾸고
+    // 3. 좋아요 카운트를 1 증가시킨다.
+    $('#like').on('click',function(){
+        $.ajax({
+          url: '/boards/<%=@board.id%>/like',
+          method: 'POST'
+        });
+    console.log(this.classList.contains('btn-info')); //javascript에 있는애 classList
+    // if $(this).attr("calss")=="btn-info"
+    if (this.classList.contains('btn-info')){
+
+    // $(this).addClass('btn-danger').removeClass('btn-info');
+    // console.log($(this).attr("class"));
+    // console.log(parseInt($('#like-counter').html())+1);
+    $('#like-counter').html(parseInt($('#like-counter').html())+1);
+    // $('#like-counter').text(parseInt($('#like-counter').html())+1);
+    }
+    else{
+      // $(this).addClass('btn-info').removeClass('btn-danger');
+      // console.log("btn-info");
+      $('#like-counter').html(parseInt($('#like-counter').html())-1);
+    }
+
+    // $(this).toggleClass('btn-danger').toggleClass('btn-info');
+    // $("셀렉터").html()
+    // 셀렉터태그내에 존재하는 자식태그을 통째로 읽어올때 사용되는 함수
+    // ※ 태그 동적추가할때 주로 사용되는 함수
+    //
+    // $("셀렉터").text()
+    // 셀렉터태그내에 존재하는 자식태그들 중에 html태그는 모두 제외 한 채 문자열만 출력하고자 할때 사용되는 함수
+    // ※ html태그까지 모두 문자로 인식시켜주는 함수
+
+
+  });
+
+});
+  // 4.빨간색으로 변한 버튼을 누르면
+  // 5. 다시 파랑으로 바꾸고
+  // 6. 좋아요 카운트를 1 감소시킨다.
+
+</script>
