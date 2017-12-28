@@ -7,7 +7,12 @@ class BoardsController < ApplicationController
 
   def show
       @board = Board.find(params[:id])
+      if user_signed_in?
       @like = Like.where(user_id: current_user.id, board_id: @board.id)#혹은 params[:id]
+    else
+      @like=[]
+    end
+    # @like=user_signed_in ? Like.where(user_id: current_user.id, board_id: @board.id): []
   end
 
   def new
