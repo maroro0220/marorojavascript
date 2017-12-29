@@ -63,9 +63,11 @@ class BoardsController < ApplicationController
 
   def destroy_comment
   @comment = Comment.find(params[:comment_id]).destroy
-    puts "#{params[:comment_id]}번 delete"
+    # puts "#{params[:comment_id]}번 delete"
   end
-  def edit_comment
-
+  
+  def update_comment
+    @comment=Comment.find(params[:comment_id])
+    @comment.update(contents: params[:contents])
   end
 end

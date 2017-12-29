@@ -33,14 +33,12 @@
   <tbody class ="comment-list">
   <%@board.comments.reverse.each do |comment|%>
     <tr id="comment-<%=comment.id%>">
-      <td>
-        <%=comment.contents%>
+      <td><%=comment.contents%></td>
+      <td align="center">
+          <button type="button" class ="btn btn-warning edit-comment" data-id="<%=comment.id%>" >edit</button>
       </td>
       <td align="center">
-          <button type="button" class ="btn btn-warning edit-comment" >edit</button>
-      </td>
-      <td align="center">
-          <button type="button" class ="btn btn-primary destroy-comment" data-id="<%=comment.id%>">delete</button>
+          <button type="button" class ="btn btn-danger destroy-comment" data-id="<%=comment.id%>">delete</button>
       </td>
     </tr>
     <% end %>
@@ -50,6 +48,7 @@
 
 $(function(){
 
+  // 댓글 삭제
   // 1. 댓글에 있는 '삭제'버튼을 누르면
   // $('.destroy-comment').on('click',function(){
   $(document).on('click','.destroy-comment',function(){
@@ -57,20 +56,82 @@ $(function(){
     var id = $(this).data('id');
     console.log(id);
     if(confirm("R U SURE?")){
+      // 2. 해당 댓글에 대한 삭제 요청을 서버로 보내고
     $.ajax({
       url: `/boards/<%=@board.id%>/comments/${id}`,    //`${}` javascript에서는 ``이걸로 씀 ""대신 `는 물결표시있는데
       method: 'delete'
     })
+    // 3. 서버에 있는 DB에서 삭제한 이후에
+    // 4. 해당 HTML Element를 삭제한다
   }
   })
-  // 2. 해당 댓글에 대한 삭제 요청을 서버로 보내고
-
-  // 3. 서버에 있는 DB에서 삭제한 이후에
-
-  // 4. 해당 HTML Element를 삭제한다
 
 
 
+
+  // 댓글 수정
+  // 1. 수정 버튼을 누르면
+  $(document).on('click', '.edit-comment',function(){
+    // console.log("edit clicked");
+    // console.log($(this).parent().siblings()[0]);
+    // console.log($($(this).parent().siblings()[0]));
+    var comment = $($(this).parent().siblings()[0]);
+    // 2. 댓글이 출력되는 부분을 input태그로 바꿔주고
+    // console.log(comment[0].innerText);
+    //console에서 확인해보면 됨. comment 구조 확인해서 찾으면됨.
+    //innerText, textContent, innerHTML......
+    var td = $(this).parents('.comment-list').find('.edit-comment-form');
+    if(td.length > 0){
+      alert("other input window is opening!!!!!!!!!!!!!!!!");
+      return false;
+      td.each(function(){
+        // console.log($(this).val());
+        $($(this).parent().siblings()[0]).replaceWith(`<td align="center">
+            <button type="button" class ="btn btn-warning edit-comment" data-id="${id}" >edit</button>
+      </td>`);
+        $.ajax({
+          url: `/boards/<%=@board.id%>/comments/${id}`,    //`${}` javascript에서는 ``이걸로 씀 ""대신 `는 물결표시있는데
+          method: 'put',
+          data: {contents: q}
+        })
+        $(this).replaceWith($(this).val());
+      })
+    }
+
+    var q = comment[0].textContent;
+    var id=$(this).data('id');
+    comment.replaceWith(`<td><input type="text" value="${q}"
+    class="form-control edit-comment-form" />
+      </td>`);
+      // 3. 수정버튼은 완료버튼으로 바꿔주고
+      //button만 바꾸는거라 <td>가 없음
+      $(this).replaceWith(`<button type="button" class ="btn btn-warning update-comment" data-id="${id}">
+      done</button>`)
+  })
+
+  $(document).on('click','.update-comment',function(){
+  // console.log($($(this).parent().siblings()[0]);
+  var q = $('.edit-comment-form').val();
+  var id=$(this).data('id');
+
+  //ruby태그는 #{}최초 1회만 만들어짐? 사용됨?
+  // 4. 완료버튼을 누르면 input 태그를 다시 td태그로 바꾸고
+  $($(this).parent().siblings()[0]).replaceWith(`<td>${q}</td>`);
+  $(this).replaceWith(`<button type="button" class ="btn btn-warning edit-comment"
+   data-id="${id}" >edit</button>`);
+
+   // 5. 해당 내용을 서버로 전송합니다
+   $.ajax({
+     url: `/boards/<%=@board.id%>/comments/${id}`,    //`${}` javascript에서는 ``이걸로 씀 ""대신 `는 물결표시있는데
+     method: 'put',
+     data: {contents: q}
+   })
+})
+
+
+
+
+  //댓글 달기
   // 1. 댓글 달기 버튼을 누르면
   // 1-1. 댓글 form이 submit되면
   $('#comment-form').on('submit',function(event){
@@ -87,7 +148,7 @@ $(function(){
   // 4. 작성한 내용을 input 아래에 추가해준다
 
 
-
+  //좋아요 버튼
   // 1. 좋아요 버튼을 클릭하면
     // 2. 버튼의 색깔을 빨강으로 바꾸고
     // 3. 좋아요 카운트를 1 증가시킨다.
@@ -121,13 +182,13 @@ $(function(){
     // 셀렉터태그내에 존재하는 자식태그들 중에 html태그는 모두 제외 한 채 문자열만 출력하고자 할때 사용되는 함수
     // ※ html태그까지 모두 문자로 인식시켜주는 함수
 
+      // 4.빨간색으로 변한 버튼을 누르면
+      // 5. 다시 파랑으로 바꾸고
+      // 6. 좋아요 카운트를 1 감소시킨다.
 
   });
 
 });
-  // 4.빨간색으로 변한 버튼을 누르면
-  // 5. 다시 파랑으로 바꾸고
-  // 6. 좋아요 카운트를 1 감소시킨다.
 
 
 

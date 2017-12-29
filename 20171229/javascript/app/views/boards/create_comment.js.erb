@@ -1,7 +1,7 @@
 $('.comment-list').prepend(`<tr id="comment-<%=@comment.id%>">
 <td><%=@comment.contents%></td><td align="center"><button type="button"
-class ="btn btn-warning edit-comment" >edit</button></td><td align="center">
-<button type="button" class ="btn btn-primary destroy-comment" data-id="<%=@comment.id%>">delete</button>
+class ="btn btn-warning edit-comment" >edit</button></td><td align="center" data-id="<%=@comment.id%>">
+<button type="button" class ="btn btn-danger destroy-comment" data-id="<%=@comment.id%>">delete</button>
 </td></tr>`);
 //''나 ""는 멀티 라인이 안돼서 ``로 해줘야함 물결표시 있는데
 $('#comment').val('');
